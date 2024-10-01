@@ -131,7 +131,7 @@ if [[ $target = wcoss2 ]]; then
     export APRUN="mpiexec -n 1 -ppn 1 --cpu-bind core"
     QUEUE=${QUEUE:-dev}
     SBATCH_COMMAND="./cpld_gridgen.sh"
-    NCCMP=/lfs/h2/emc/global/noscrub/George.Gayno/util/nccmp/nccmp-1.8.5.0/src/nccmp
+    NCCMP=nccmp
 elif [[ $target = hera ]]; then
     STMP=${STMP:-/scratch1/NCEPDEV/stmp4/$USER}
     export MOM6_FIXDIR=/scratch1/NCEPDEV/global/glopara/fix/mom6/20220805
@@ -162,9 +162,9 @@ elif [[ $target = hercules ]]; then
     ulimit -s unlimited
     SBATCH_COMMAND="./cpld_gridgen.sh"
 elif [[ $target = jet ]]; then
-    STMP=${STMP:-/lfs4/HFIP/h-nems/$USER}
-    export MOM6_FIXDIR=/lfs4/HFIP/hfv3gfs/glopara/git/fv3gfs/fix/mom6/20220805
-    BASELINE_ROOT=/lfs4/HFIP/hfv3gfs/emc.nemspara/role.ufsutils/ufs_utils/reg_tests/cpld_gridgen/baseline_data
+    STMP=${STMP:-/lfs5/HFIP/h-nems/$USER}
+    export MOM6_FIXDIR=/lfs5/HFIP/hfv3gfs/glopara/FIX/fix/mom6/20220805
+    BASELINE_ROOT=/lfs5/HFIP/hfv3gfs/emc.nemspara/role.ufsutils/ufs_utils/reg_tests/cpld_gridgen/baseline_data
     ACCOUNT=${ACCOUNT:-h-nems}
     QUEUE=${QUEUE:-batch}
     NCCMP=nccmp
@@ -217,6 +217,10 @@ fi
 
 module use $PATHTR/modulefiles
 module load build.$target.$compiler
+if [[ $target = wcoss2 ]]; then
+  module load netcdf
+  module load nccmp
+fi
 module list
 
 if [[ $CREATE_BASELINE = true ]]; then
